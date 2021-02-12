@@ -48,22 +48,24 @@ body {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   font-size: 1.2rem;
   border-radius: var(--round-i);
   padding: .2em .5em;
 }
 
-.btn + .btn {
-  margin-left: 1em;
-}
-
 .btn-p {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: .2em .5em;
 }
 
 .btn:hover {
-  box-shadow: 0px 0px 0px 2px var(--clr-bg-h1);
+  box-shadow: 0px 0px 0px 4px var(--clr-bg-h1);
   outline: none;
 }
 
@@ -77,7 +79,7 @@ body {
 }
 
 .btn:focus {
-  box-shadow: 0px 0px 0px 4px var(--clr-bg-h1);
+  box-shadow: 0px 0px 0px 2px var(--clr-bg-h1);
   outline: none;
 }
 
@@ -128,6 +130,16 @@ body {
   align-items: center;
   /* outline: 1px solid red; */
   font-size: .8rem;
+}
+
+.controls-h {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  flex-grow: 1;
+  justify-content: stretch;
+  align-items: stretch;
+  gap: .5em;
 }
 
 p {
@@ -193,6 +205,11 @@ p {
   /* position: sticky; */
   bottom: 0;
   z-index: 0;
+}
+
+.btn-sq {
+  width: 1.5em;
+  height: 1.5em;
 }
 
 .App-link {

@@ -1,7 +1,14 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { connect } from 'react-redux';
+import { actionInc, actionDec } from './redux/store';
 import './App.css';
+import Status from './components/Status';
+import { useContext } from 'react';
 
-function App() {
+import { AppContext } from './context/global';
+
+function App(props: any) {
+	let { globalState, setGlobalState } = useContext(AppContext);
+
 	return (
 		<>
 			<div className="App">
@@ -9,7 +16,7 @@ function App() {
 					<nav className="navbar">
 						<div className="nav-main">
 							<ul className="list-nd nav-main">
-								<li>App Title</li>
+								<li>{globalState.title}</li>
 								<li>Home</li>
 							</ul>
 						</div>
@@ -23,6 +30,23 @@ function App() {
 				</header>
 				<main className="App-main  u-rounded u-shadow-1">
 					<h1>App Body</h1>
+					<div className="controls-h">
+						<button
+							className="btn btn-sq"
+							onClick={() => {
+								props.actionInc();
+								setGlobalState({ title: 'New App' });
+							}}
+						>
+							+
+						</button>
+						<button className="btn btn-sq" onClick={() => props.actionDec()}>
+							-
+						</button>
+					</div>
+
+					<Status></Status>
+
 					<ul className="list-nd">
 						<li>
 							<p className="">
@@ -46,8 +70,10 @@ function App() {
 								placeat dignissimos magni maxime! Natus placeat iusto sapiente
 								voluptatem at nulla dolores neque repudiandae impedit voluptas?
 							</p>
-							<button className="btn btn-p cta">Order</button>
-							<button className="btn">Order</button>
+							<div className="controls-h">
+								<button className="btn btn-p cta">Order</button>
+								<button className="btn">Order</button>
+							</div>
 						</li>
 						<li>
 							<p>
@@ -150,4 +176,9 @@ function App() {
 	);
 }
 
-export default App;
+export default connect(
+	(state: { value: number }) => ({
+		counter: state.value,
+	}),
+	{ actionInc, actionDec }
+)(App);
