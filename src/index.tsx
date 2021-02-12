@@ -1,28 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router } from '@reach/router';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { store } from './redux/store';
 import './styles/index.css';
 import App from './pages/App';
 import About from './pages/About';
+import Register from './pages/Register';
+import Links from './pages/Links';
+import Contact from './pages/Contact';
 
 import reportWebVitals from './reportWebVitals';
 import { AppContextProvider } from './context/global';
 
 import Layout from './components/Layout';
 
+const Pages = [
+	{ name: 'links', component: Links },
+	{ name: 'about', component: About },
+	{ name: 'contact', component: Contact },
+];
+
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<AppContextProvider>
-				<Layout>
-					<Router>
-						<App path="/" />
-						<About path="about" />
-					</Router>
-				</Layout>
+				<Router>
+					<Layout>
+						<Switch>
+							{Pages.map((page) => (
+								<Route path={'/' + page.name}>{page.component}</Route>
+							))}
+							<Route path="/">
+								<App></App>
+							</Route>
+						</Switch>
+					</Layout>
+				</Router>
 			</AppContextProvider>
 		</Provider>
 	</React.StrictMode>,
