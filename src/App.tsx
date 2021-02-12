@@ -28,7 +28,7 @@ function App(props: any) {
 						</ul>
 					</nav>
 				</header>
-				<main className="App-main  u-rounded u-shadow-1">
+				<main className="App-main  u-rounded">
 					<h1>App Body</h1>
 					<div className="controls-h">
 						<button
@@ -170,7 +170,14 @@ function App(props: any) {
 						</li>
 					</ul>
 				</main>
-				<footer className="App-footer">App Footer</footer>
+				<footer>
+					<div className="container u-rounded">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
+						neque provident iste distinctio nam unde eum blanditiis quaerat
+						iusto id.
+					</div>
+					<span className="App-footer">App-Footer</span>
+				</footer>
 			</div>
 		</>
 	);
