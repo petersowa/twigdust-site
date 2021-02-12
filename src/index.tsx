@@ -1,11 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { Router } from '@reach/router';
+
 import { store } from './redux/store';
 import './styles/index.css';
 import App from './pages/App';
+import About from './pages/About';
+
 import reportWebVitals from './reportWebVitals';
 import { AppContextProvider } from './context/global';
+
 import Layout from './components/Layout';
 
 ReactDOM.render(
@@ -13,7 +18,10 @@ ReactDOM.render(
 		<Provider store={store}>
 			<AppContextProvider>
 				<Layout>
-					<App />
+					<Router>
+						<App path="/" />
+						<About path="about" />
+					</Router>
 				</Layout>
 			</AppContextProvider>
 		</Provider>

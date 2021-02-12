@@ -7,7 +7,7 @@ function Layout(props: any) {
 	return (
 		<div className="App">
 			<Header></Header>
-			{props.children}
+			<main className="App-main  u-rounded">{props.children}</main>
 			<Footer></Footer>
 		</div>
 	);

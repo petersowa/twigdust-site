@@ -134,6 +134,11 @@ body {
   font-size: .8rem;
 }
 
+.nav-item {
+  text-decoration: none;
+  color: var(--clr-l1);
+}
+
 .controls-h {
   display: flex;
   flex-direction: row;
@@ -185,7 +190,7 @@ p {
   gap: 2em;
   color: var(--clr-l1);
   background-color: var(--clr-bg-d);
-  position: sticky;
+  /* position: sticky; */
   top:0;
   z-index: 1;
 }
@@ -197,6 +202,7 @@ p {
   padding: 2vw 5vw;
   margin: .5em .5em;
   line-height: 1.6;
+  flex-basis: 100vw;
 }
 
 .container  {
