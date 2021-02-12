@@ -2,16 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-import './index.css';
-import App from './App';
+import './styles/index.css';
+import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 import { AppContextProvider } from './context/global';
+import Layout from './components/Layout';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<AppContextProvider>
-				<App />
+				<Layout>
+					<App />
+				</Layout>
 			</AppContextProvider>
 		</Provider>
 	</React.StrictMode>,
