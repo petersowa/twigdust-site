@@ -26,7 +26,7 @@ const Header = (props: Props) => {
 
 				<ul className="list-nd nav-secondary">
 					{['Links', 'Contact', 'About'].map((link) => (
-						<li>
+						<li key={link}>
 							<Link to={link.toLocaleLowerCase()} className="nav-item">
 								{link}
 							</Link>

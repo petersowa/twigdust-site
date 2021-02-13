@@ -1,0 +1,154 @@
+body {
+    background-color: #444;
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+  }
+  
+  .earth {
+    --scale: 1;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 50vh;
+    left: 50vw;
+    background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1200px-The_Earth_seen_from_Apollo_17.jpg");
+    background-size: 112%;
+    background-position: center;
+    border-radius: 50%;
+    transform: translate(-50%,-50%) scale(calc(var(--scale) * var(--gscale)))
+  }
+  
+  .controls {
+    width: 18rem;
+    height: auto;
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    background: #ffffffaa;
+    overflow: hidden;
+    border-radius: 5px;
+    padding: .5rem;
+  }
+  
+  .circle {
+    position: absolute;
+    --x: 0px;
+    --y: 0px;
+    --radius: 100px;
+    --scale: 1;
+    width: calc(var(--radius)*2);
+    height: calc(var(--radius)*2);
+    background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/220px-FullMoon2010.jpg") whitesmoke
+      no-repeat;
+    /* background-position: center center; */
+    background-size: 125%;
+    background-position: center center;
+    border-radius: 50%;
+    color: black;
+    transform: translate(
+        calc(var(--x) - var(--radius)),
+        calc(var(--y) - var(--radius))
+      )
+      scale(calc(var(--scale) * var(--gscale)));
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  
+  .padding-md {
+    padding: 0.5rem;
+  }
+  
+  .shadow-md {
+    box-shadow: 8px 10px 26px -2px rgba(0, 0, 0, 0.9);
+    -webkit-box-shadow: 8px 10px 26px -2px rgba(0, 0, 0, 0.9);
+    -moz-box-shadow: 8px 10px 26px -2px rgba(0, 0, 0, 0.9);
+  }
+  
+  .rounded-sm {
+    border-radius: 5px;
+  }
+  
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .flex-row {
+    flex-basis: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: .5rem;
+  }
+  
+  .margin-md {
+    margin: 10px;
+  }
+  
+  .field {
+    --gscale: 1;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right:0px;
+    margin: 0px;
+    opacity: 1;
+    overflow: hidden;
+    transform: scale(1) translate(0px, 0px);
+    background-color: #111;
+  }
+  
+  .bg-blue {
+    background-color: #00f;
+  }
+  
+  .transition-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .transition-out {
+    opacity: 0;
+    transform: scale(0);
+  }
+  
+  .drag-bar {
+    draggable: true;
+    width: 100%;
+    height: 10px;
+    margin-bottom: 8px;
+    background-color: grey;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+  }
+  
+  .bar {
+    width: 100%;
+    height: 2px;
+    margin: 2px 0px;
+    background-color: white;
+  }
+  
+  button {
+    padding: .8rem;
+    font-size: 1.2rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 8px;
+    border-style: none;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  button:active {
+    opacity: .5;
+    transform: scale(1.1);
+  }
+  
+  button[disabled] {
+    opacity: 0;
+  }

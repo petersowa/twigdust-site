@@ -10,6 +10,8 @@ import About from './pages/About';
 import Register from './pages/Register';
 import Links from './pages/Links';
 import Contact from './pages/Contact';
+import Test from './pages/Test';
+import GravityKeys from './pages/GravityKeys/GravityKeys';
 
 import reportWebVitals from './reportWebVitals';
 import { AppContextProvider } from './context/global';
@@ -20,6 +22,8 @@ const Pages = [
 	{ name: 'links', component: Links },
 	{ name: 'about', component: About },
 	{ name: 'contact', component: Contact },
+	{ name: 'gravity-keys', component: GravityKeys },
+	{ name: 'test', component: Test },
 ];
 
 ReactDOM.render(
@@ -30,8 +34,13 @@ ReactDOM.render(
 					<Layout>
 						<Switch>
 							{Pages.map((page) => (
-								<Route path={'/' + page.name}>{page.component}</Route>
+								<Route
+									key={page.name}
+									path={'/' + page.name}
+									component={page.component}
+								/>
 							))}
+
 							<Route path="/">
 								<App></App>
 							</Route>
