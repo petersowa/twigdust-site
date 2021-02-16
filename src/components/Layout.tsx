@@ -19,9 +19,7 @@ function Layout(props: any) {
 			<main className="App-main  u-rounded">
 				<SidebarRight />
 				<div className="app-body">{props.children}</div>
-				<div className="app-sidebar">
-					<h1>Sidebar</h1>
-				</div>
+				<div className="app-sidebar"></div>
 			</main>
 			<Footer></Footer>
 		</div>

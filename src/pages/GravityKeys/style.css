@@ -7,11 +7,11 @@ body {
   
   .earth {
     --scale: 1;
-    position: absolute;
+    position: relative;
     width: 200px;
     height: 200px;
-    top: 50vh;
-    left: 50vw;
+    top: 50%;
+    left: 50%;
     background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1200px-The_Earth_seen_from_Apollo_17.jpg");
     background-size: 112%;
     background-position: center;
@@ -22,7 +22,7 @@ body {
   .controls {
     width: 18rem;
     height: auto;
-    position: fixed;
+    position: absolute;
     top: 2rem;
     left: 2rem;
     background: #ffffffaa;
@@ -31,7 +31,7 @@ body {
     padding: .5rem;
   }
   
-  .circle {
+  .moon {
     position: absolute;
     --x: 0px;
     --y: 0px;
@@ -90,15 +90,16 @@ body {
   
   .field {
     --gscale: 1;
-    position: absolute;
+    position: relative;
     top: 0px;
     left: 0px;
-    bottom: 0px;
-    right:0px;
-    margin: 0px;
+    width: auto;
+    height: 90vh;
+    margin: .2em;
+    border-radius: 1em;
     opacity: 1;
     overflow: hidden;
-    transform: scale(1) translate(0px, 0px);
+    transform: scale(var(--gscale)) translate(0px, 0px);
     background-color: #111;
   }
   
@@ -117,7 +118,6 @@ body {
   }
   
   .drag-bar {
-    draggable: true;
     width: 100%;
     height: 10px;
     margin-bottom: 8px;

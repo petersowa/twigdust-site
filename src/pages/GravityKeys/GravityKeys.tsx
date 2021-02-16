@@ -1,258 +1,278 @@
+import { posix } from 'path';
 import { useRef, useEffect, useState } from 'react';
+import Draggable from 'react-draggable';
 import './style.css';
 
-const keys = {};
+const keys: { [key: string]: boolean } = {};
 
-const D_Key = 'D'.charCodeAt(0);
-const W_Key = 'W'.charCodeAt(0);
-const A_Key = 'A'.charCodeAt(0);
-const S_Key = 'S'.charCodeAt(0);
+const Earth = ({ scale = 1 }) => {
+	const obj = useRef<HTMLDivElement>(null);
+
+	obj?.current?.style.setProperty('--scale', `${scale}`);
+
+	return <div ref={obj} className="earth shadow-sm"></div>;
+};
+
+const Moon = ({
+	center = { x: 0, y: 0 },
+	pos = { x: 0, y: 0 },
+	speed = 1,
+	scale = 1,
+}) => {
+	const obj = useRef<HTMLDivElement>(null);
+
+	obj?.current?.style.setProperty('--x', `${pos.x * scale + center.x}px`);
+	obj?.current?.style.setProperty('--y', `${pos.y * scale + center.y}px`);
+	obj?.current?.style.setProperty('--radius', '100px');
+	obj?.current?.style.setProperty('--scale', `${speed * scale}`);
+
+	return <div ref={obj} className="moon"></div>;
+};
+
+interface Handler {
+	(
+		name: 'up' | 'down' | 'left' | 'right' | 'zoom+' | 'zoom-' | 'reset' | '',
+		state: 'up' | 'down' | 'click' | ''
+	): void;
+}
+
+function useInterval(callback: () => void, delay: number | null) {
+	const savedCallback = useRef<() => void | null>();
+	// Remember the latest callback.
+	useEffect(() => {
+		savedCallback.current = callback;
+	});
+	// Set up the interval.
+	useEffect(() => {
+		function tick() {
+			if (typeof savedCallback?.current !== 'undefined') {
+				savedCallback?.current();
+			}
+		}
+		if (delay !== null) {
+			const id = setInterval(tick, delay);
+			return () => clearInterval(id);
+		}
+	}, [delay]);
+}
+
+const Controls = (props: { handler: Handler }) => {
+	const { handler } = props;
+	const controlsRef = useRef(null);
+
+	function buttonUp() {}
+	function buttonDown() {}
+	function buttonRight() {}
+	function buttonLeft() {}
+	function buttonReset() {}
+	function buttonZoomIn() {}
+	function buttonZoomOut() {}
+
+	return (
+		<Draggable handle=".drag-bar" nodeRef={controlsRef}>
+			<div ref={controlsRef} className="controls">
+				<div className="drag-bar">
+					<div className="bar"></div>
+					<div className="bar"></div>
+				</div>
+				<div className="flex-row">
+					<button
+						onClick={() => handler('up', 'click')}
+						onMouseDown={() => handler('up', 'down')}
+						onMouseUp={() => handler('up', 'up')}
+						onMouseLeave={() => handler('up', 'up')}
+						id="up"
+						className="shadow-sm"
+					>
+						<i className="fas fa-angle-up"></i>
+					</button>
+					<button
+						onClick={() => handler('down', 'click')}
+						onMouseDown={() => handler('down', 'down')}
+						onMouseUp={() => handler('down', 'up')}
+						onMouseLeave={() => handler('down', 'up')}
+						id="down"
+						className="shadow-sm"
+					>
+						<i className="fas fa-angle-down"></i>
+					</button>
+					<button
+						onClick={() => handler('left', 'click')}
+						onMouseDown={() => handler('left', 'down')}
+						onMouseUp={() => handler('left', 'up')}
+						onMouseLeave={() => handler('left', 'up')}
+						id="left"
+						className="shadow-sm"
+					>
+						<i className="fas fa-angle-left"></i>
+					</button>
+					<button
+						onClick={() => handler('right', 'click')}
+						onMouseDown={() => handler('right', 'down')}
+						onMouseUp={() => handler('right', 'up')}
+						onMouseLeave={() => handler('right', 'up')}
+						id="right"
+						className="shadow-sm"
+					>
+						<i className="fas fa-angle-right"></i>
+					</button>
+					<button
+						onClick={() => handler('reset', 'click')}
+						id="reset"
+						className="shadow-sm"
+					>
+						<i className="fas fa-undo-alt"></i>
+					</button>
+				</div>
+				<div className="flex-row">
+					<button
+						onClick={() => handler('zoom+', 'click')}
+						id="zoom-in"
+						className="shadow-sm"
+					>
+						<i className="fas fa-search-plus"></i>
+					</button>
+					<button
+						onClick={() => handler('zoom-', 'click')}
+						id="zoom-out"
+						className="shadow-sm"
+					>
+						<i className="fas fa-search-minus"></i>
+					</button>
+					<button disabled id="" className="shadow-sm">
+						<i className="fas fa-cloud"></i>
+					</button>
+					<button disabled id="" className="shadow-sm">
+						<i className="fas fa-cloud"></i>
+					</button>
+					<button disabled id="" className="shadow-sm">
+						<i className="fas fa-cloud"></i>
+					</button>
+				</div>
+				<p>Use keys: W,A,S,D</p>
+			</div>
+		</Draggable>
+	);
+};
+
+let vx = 1.6;
+let vy = 0;
+let defaults = { x: 0, y: 200, vx, vy };
 
 export default function GravityKeys() {
 	const fieldRef = useRef<HTMLDivElement>(null);
 	const [center, setCenter] = useState({ x: 0, y: 0 });
-	let classToggle = true;
-
-	useEffect(() => {
-		console.log(fieldRef.current);
-		if (fieldRef && fieldRef.current) {
-			console.log(fieldRef.current.offsetWidth);
-			let x = fieldRef.current.offsetWidth / 2;
-			let y = fieldRef.current.offsetHeight / 2;
-			setCenter({ x, y });
-		}
-	}, [fieldRef.current]);
-
-	// https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1200px-The_Earth_seen_from_Apollo_17.jpg
-
-	let y = 200;
-	let x = 0;
-	let vx = 1.6;
-	let vy = 0;
-	let gscale = 1.0;
+	const [gscale, setGScale] = useState(1);
+	const [speed, setSpeed] = useState(1);
+	const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 200 });
 
 	let touchDevice = false;
 
-	let defaults = { x, y, vx, vy };
+	useEffect(() => {
+		if (fieldRef && fieldRef.current) {
+			const x = fieldRef?.current?.offsetWidth / 2;
+			const y = fieldRef?.current?.offsetHeight / 2;
+			setCenter({ x, y });
+		}
+		window.addEventListener('resize', () => {
+			if (fieldRef && fieldRef.current) {
+				const x = fieldRef.current.offsetWidth / 2;
+				const y = fieldRef.current.offsetHeight / 2;
+				setCenter({ x, y });
+			}
+		});
+	}, [fieldRef.current]);
+
+	useEffect(() => {
+		console.log('mounted');
+		const handleKeydown = function (event: KeyboardEvent) {
+			keys[event.key.toUpperCase()] = true;
+			console.log(keys);
+		};
+		const handleKeyup = function (event: KeyboardEvent) {
+			console.log('delete key', keys);
+			delete keys[event.key.toUpperCase()];
+		};
+		window.addEventListener('keydown', handleKeydown);
+		window.addEventListener('keyup', handleKeyup);
+		// const interval = setInterval(() => mainLoop(), 10);
+
+		return () => {
+			window.removeEventListener('keyup', handleKeyup);
+			window.removeEventListener('keydown', handleKeydown);
+		};
+	}, []);
+
+	useInterval(mainLoop, 10);
+
+	function mainLoop() {
+		Object.keys(keys).forEach(function (key) {
+			switch (key) {
+				case 'D':
+					vx += 0.01;
+					break;
+				case 'A':
+					vx -= 0.01;
+					break;
+				case 'S':
+					vy += 0.01;
+					break;
+				case 'W':
+					vy -= 0.01;
+					break;
+			}
+		});
+		const dX = 0 - pos.x;
+		const dY = 0 - pos.y;
+		const distance = dX * dX + dY * dY;
+		const angle = Math.atan2(dY, dX);
+		const grav = 400 / distance;
+		const gX = Math.cos(angle) * grav;
+		const gY = Math.sin(angle) * grav;
+		vx += gX;
+		vy += gY;
+		setPos({ x: pos.x + vx, y: pos.y + vy });
+		setSpeed((Math.sqrt(vy * vy + vx * vx) + 1) * 0.1);
+	}
+
+	// https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1200px-The_Earth_seen_from_Apollo_17.jpg
+
+	const handleControl: Handler = (name, state) => {
+		switch (name) {
+			case 'zoom+':
+				setGScale(gscale + 0.1);
+				break;
+			case 'zoom-':
+				setGScale(gscale > 0.2 ? gscale - 0.1 : 0.1);
+				break;
+			case 'up':
+				break;
+			case 'down':
+				break;
+			case 'left':
+				break;
+			case 'right':
+				break;
+			case 'reset':
+				const x = defaults.x;
+				const y = defaults.y;
+				vx = defaults.vx;
+				vy = defaults.vy;
+				setPos({ x, y });
+				console.log('reset');
+				break;
+			default:
+				break;
+		}
+	};
 
 	return (
 		<div>
 			<div ref={fieldRef} className="field">
-				<div className="circle shadow-sm"></div>
-				<div className="earth"></div>
-				<div className="controls">
-					<div className="drag-bar">
-						<div className="bar"></div>
-						<div className="bar"></div>
-					</div>
-					<div className="flex-row">
-						<button id="up" className="shadow-sm">
-							<i className="fas fa-angle-up"></i>
-						</button>
-						<button id="down" className="shadow-sm">
-							<i className="fas fa-angle-down"></i>
-						</button>
-						<button id="left" className="shadow-sm">
-							<i className="fas fa-angle-left"></i>
-						</button>
-						<button id="right" className="shadow-sm">
-							<i className="fas fa-angle-right"></i>
-						</button>
-						<button id="reset" className="shadow-sm">
-							<i className="fas fa-undo-alt"></i>
-						</button>
-					</div>
-					<div className="flex-row">
-						<button id="zoom-in" className="shadow-sm">
-							<i className="fas fa-search-plus"></i>
-						</button>
-						<button id="zoom-out" className="shadow-sm">
-							<i className="fas fa-search-minus"></i>
-						</button>
-						<button disabled id="" className="shadow-sm">
-							<i className="fas fa-cloud"></i>
-						</button>
-						<button disabled id="" className="shadow-sm">
-							<i className="fas fa-cloud"></i>
-						</button>
-						<button disabled id="" className="shadow-sm">
-							<i className="fas fa-cloud"></i>
-						</button>
-					</div>
-					<p>Use keys: W,A,S,D</p>
-				</div>
+				<Moon scale={gscale} center={center} pos={pos} speed={speed} />
+				<Earth scale={gscale} />
+				<Controls handler={handleControl} />
 			</div>
 		</div>
 	);
 }
-
-//function main() {
-// const $ = (query) => document.querySelector(query)[0];
-// let centerX = $('.field').width() / 2;
-// let centerY = $('.field').height() / 2;
-// $(function () {
-// 	$('#app').addClass('app shadow-md rounded-sm bg-blue margin-md');
-// 	$('button').on('click tap', function () {
-// 		// console.log("mousedown");
-// 		switch ($(this).attr('id')) {
-// 			case 'reset':
-// 				x = defaults.x;
-// 				y = defaults.y;
-// 				vx = defaults.vx;
-// 				vy = defaults.vy;
-// 				break;
-// 			case 'zoom-out':
-// 				gscale *= 0.8;
-// 				break;
-// 			case 'zoom-in':
-// 				gscale *= 1.25;
-// 				break;
-// 		}
-// 	});
-// 	document.getElementById('right').addEventListener(
-// 		'touchstart',
-// 		(event) => {
-// 			touchDevice = keys[D_Key] = true;
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('right').addEventListener(
-// 		'touchend',
-// 		(event) => {
-// 			delete keys[D_Key];
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('left').addEventListener(
-// 		'touchstart',
-// 		(event) => {
-// 			touchDevice = keys[A_Key] = true;
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('left').addEventListener(
-// 		'touchend',
-// 		(event) => {
-// 			delete keys[A_Key];
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('up').addEventListener(
-// 		'touchstart',
-// 		(event) => {
-// 			touchDevice = keys[W_Key] = true;
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('up').addEventListener(
-// 		'touchend',
-// 		(event) => {
-// 			delete keys[W_Key];
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('down').addEventListener(
-// 		'touchstart',
-// 		(event) => {
-// 			touchDevice = keys[S_Key] = true;
-// 		},
-// 		false
-// 	);
-// 	document.getElementById('down').addEventListener(
-// 		'touchend',
-// 		(event) => {
-// 			delete keys[S_Key];
-// 		},
-// 		false
-// 	);
-// 	$('button').on('mousedown', function () {
-// 		// console.log("mousedown");
-// 		if (touchDevice) return;
-// 		switch ($(this).attr('id')) {
-// 			case 'right':
-// 				keys[D_Key] = true;
-// 				break;
-// 			case 'left':
-// 				keys[A_Key] = true;
-// 				break;
-// 			case 'down':
-// 				keys[S_Key] = true;
-// 				break;
-// 			case 'up':
-// 				keys[W_Key] = true;
-// 				break;
-// 		}
-// 		// console.log(keys);
-// 	});
-// 	$('button').on('mouseup', function () {
-// 		if (touchDevice) return;
-// 		// console.log("mouseup");
-// 		switch ($(this).attr('id')) {
-// 			case 'right':
-// 				delete keys[D_Key];
-// 				break;
-// 			case 'left':
-// 				delete keys[A_Key];
-// 				break;
-// 			case 'down':
-// 				delete keys[S_Key];
-// 				break;
-// 			case 'up':
-// 				delete keys[W_Key];
-// 				break;
-// 		}
-// 	});
-// 	setInterval(function () {
-// 		// console.log(keys)
-// 		Object.keys(keys).forEach(function (key) {
-// 			// console.log(key)
-// 			switch (parseInt(key)) {
-// 				case D_Key:
-// 					vx += 0.01;
-// 					break;
-// 				case A_Key:
-// 					vx -= 0.01;
-// 					break;
-// 				case S_Key:
-// 					vy += 0.01;
-// 					break;
-// 				case W_Key:
-// 					vy -= 0.01;
-// 					break;
-// 			}
-// 		});
-// 		const dX = 0 - x;
-// 		const dY = 0 - y;
-// 		const distance = dX * dX + dY * dY;
-// 		const angle = Math.atan2(dY, dX);
-// 		const grav = 400 / distance;
-// 		const gX = Math.cos(angle) * grav;
-// 		const gY = Math.sin(angle) * grav;
-// 		// console.log(dX,dY,angle)
-// 		const obj = $('.circle')[0];
-// 		vx += gX;
-// 		vy += gY;
-// 		x += vx;
-// 		y += vy;
-// 		obj.style.setProperty('--x', centerX + x * gscale + 'px');
-// 		obj.style.setProperty('--y', centerY + y * gscale + 'px');
-// 		obj.style.setProperty(
-// 			'--scale',
-// 			(Math.sqrt(vy * vy + vx * vx) + 1) * 0.1
-// 		);
-// 		$('.field')[0].style.setProperty('--gscale', gscale);
-// 	}, 1);
-// 	$(window).on('keyup', function (event) {
-// 		delete keys[event.which];
-// 	});
-// 	$(window).on('keydown', function (event) {
-// 		keys[event.which] = true;
-// 	});
-// 	$(window).on('resize', function () {
-// 		centerX = $('.field').width() / 2;
-// 		centerY = $('.field').height() / 2;
-// 	});
-// });
-// $('.controls').draggable({ handle: '.drag-bar' });
-// //
-//}
