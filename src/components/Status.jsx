@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { AppContext } from '../context/global';
 
 function Status({ counter }) {
-	const { globalState } = useContext(AppContext);
+	const { state } = useContext(AppContext);
 	return (
 		<div>
-			Status: Counter is {counter}, AppTitle is: {globalState.title}
+			Status: Counter is {counter}, AppTitle is: {state.title}
 		</div>
 	);
 }

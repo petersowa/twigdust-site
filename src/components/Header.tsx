@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AppContext } from '../context/global';
 
 const Header = (props: Props) => {
-	const { globalState } = useContext(AppContext);
+	const { state } = useContext(AppContext);
 
 	return (
 		<header className="App-header u-shadow-1">
@@ -13,7 +13,7 @@ const Header = (props: Props) => {
 					<ul className="list-nd nav-main">
 						<li>
 							<Link to="/" className="nav-item">
-								{globalState.title}
+								{state.title}
 							</Link>
 						</li>
 						<li>

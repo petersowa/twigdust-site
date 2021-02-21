@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import { store } from './redux/store';
 import './styles/index.css';
@@ -28,27 +29,29 @@ const Pages = [
 
 ReactDOM.render(
 	<React.StrictMode>
-		<Provider store={store}>
-			<AppContextProvider>
-				<Router>
-					<Layout>
-						<Switch>
-							{Pages.map((page) => (
-								<Route
-									key={page.name}
-									path={'/' + page.name}
-									component={page.component}
-								/>
-							))}
+		<HelmetProvider>
+			<Provider store={store}>
+				<AppContextProvider>
+					<Router>
+						<Layout>
+							<Switch>
+								{Pages.map((page) => (
+									<Route
+										key={page.name}
+										path={'/' + page.name}
+										component={page.component}
+									/>
+								))}
 
-							<Route path="/">
-								<App></App>
-							</Route>
-						</Switch>
-					</Layout>
-				</Router>
-			</AppContextProvider>
-		</Provider>
+								<Route path="/">
+									<App></App>
+								</Route>
+							</Switch>
+						</Layout>
+					</Router>
+				</AppContextProvider>
+			</Provider>
+		</HelmetProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

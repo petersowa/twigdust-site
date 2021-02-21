@@ -5,27 +5,54 @@ import { actionInc, actionDec } from '../redux/store';
 import Status from '../components/Status';
 import { AppContext } from '../context/global';
 
+function Button(props: { body: string; [key: string]: any }) {
+	const { body, ...rest } = props;
+	return (
+		<button className="btn btn-sq" {...rest}>
+			{body}
+		</button>
+	);
+}
+
 function App(props: any) {
-	let { setGlobalState } = useContext(AppContext);
+	let { state, actions } = useContext(AppContext);
 
 	return (
 		<>
 			<div>
 				<h1>App Body</h1>
 				<div className="controls-h">
-					<button
-						className="btn btn-sq"
-						onClick={() => {
-							props.actionInc();
-							setGlobalState({ title: 'New App' });
-						}}
-					>
-						+
-					</button>
 					<button className="btn btn-sq" onClick={() => props.actionDec()}>
 						-
 					</button>
+					<Button body="+" onClick={() => props.actionInc()} />
+					<Button
+						className="btn"
+						body="New Title"
+						onClick={() => actions.updateTitle!({ title: 'New App' })}
+					/>
+					<Button
+						className="btn"
+						body="Clear Title"
+						onClick={() => actions.clearTitle!()}
+					/>
+					<Button
+						className="btn"
+						body="Reverse Title"
+						onClick={() => actions.reverseTitle!()}
+					/>
 				</div>
+
+				<label htmlFor="appName"></label>
+				<input
+					name="appName"
+					type="text"
+					value={state.title}
+					onChange={(event) => {
+						console.log(event.target.value);
+						actions.updateTitle!({ title: event.target.value });
+					}}
+				></input>
 
 				<Status></Status>
 
