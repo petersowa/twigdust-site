@@ -1,9 +1,9 @@
-body {
+/* body {
     background-color: #444;
     margin: 0px;
     padding: 0px;
     font-family: sans-serif;
-  }
+  } */
   
   .earth {
     --scale: 1;
@@ -53,30 +53,30 @@ body {
       scale(calc(var(--scale) * var(--gscale)));
   }
   
-  .shadow-sm {
+  .shadowSm {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
   
-  .padding-md {
+  .paddingMd {
     padding: 0.5rem;
   }
   
-  .shadow-md {
+  .shadowMd {
     box-shadow: 8px 10px 26px -2px rgba(0, 0, 0, 0.9);
     -webkit-box-shadow: 8px 10px 26px -2px rgba(0, 0, 0, 0.9);
     -moz-box-shadow: 8px 10px 26px -2px rgba(0, 0, 0, 0.9);
   }
   
-  .rounded-sm {
+  .roundedSm {
     border-radius: 5px;
   }
   
-  .flex-column {
+  .flexColumn {
     display: flex;
     flex-direction: column;
   }
   
-  .flex-row {
+  .flexRow {
     flex-basis: 100px;
     display: flex;
     flex-direction: row;
@@ -84,7 +84,7 @@ body {
     margin-bottom: .5rem;
   }
   
-  .margin-md {
+  .marginMd {
     margin: 10px;
   }
   
@@ -103,21 +103,21 @@ body {
     background-color: #111;
   }
   
-  .bg-blue {
+  .bgBlue {
     background-color: #00f;
   }
   
-  .transition-in {
+  .transitionIn {
     opacity: 1;
     transform: scale(1);
   }
   
-  .transition-out {
+  .transitionOut {
     opacity: 0;
     transform: scale(0);
   }
   
-  .drag-bar {
+  .dragBar {
     width: 100%;
     height: 10px;
     margin-bottom: 8px;
@@ -133,7 +133,7 @@ body {
     background-color: white;
   }
   
-  button {
+  .button {
     padding: .8rem;
     font-size: 1.2rem;
     width: 3rem;
@@ -144,11 +144,11 @@ body {
     outline: none;
   }
   
-  button:active {
+  .button:active {
     opacity: .5;
     transform: scale(1.1);
   }
   
-  button[disabled] {
+  .button[disabled] {
     opacity: 0;
   }

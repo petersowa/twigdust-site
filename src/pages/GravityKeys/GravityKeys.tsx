@@ -1,7 +1,6 @@
-import { posix } from 'path';
 import { useRef, useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import './style.css';
+import styles from './style.module.css';
 
 const keys: { [key: string]: boolean } = {};
 
@@ -10,7 +9,7 @@ const Earth = ({ scale = 1 }) => {
 
 	obj?.current?.style.setProperty('--scale', `${scale}`);
 
-	return <div ref={obj} className="earth shadow-sm"></div>;
+	return <div ref={obj} className={styles.earth + ' ' + styles.shadowSm}></div>;
 };
 
 const Moon = ({
@@ -26,7 +25,7 @@ const Moon = ({
 	obj?.current?.style.setProperty('--radius', '100px');
 	obj?.current?.style.setProperty('--scale', `${speed * scale}`);
 
-	return <div ref={obj} className="moon"></div>;
+	return <div ref={obj} className={styles.moon}></div>;
 };
 
 interface Handler {
@@ -69,20 +68,20 @@ const Controls = (props: { handler: Handler }) => {
 	function buttonZoomOut() {}
 
 	return (
-		<Draggable handle=".drag-bar" nodeRef={controlsRef}>
-			<div ref={controlsRef} className="controls">
-				<div className="drag-bar">
-					<div className="bar"></div>
-					<div className="bar"></div>
+		<Draggable handle="#controls-drag-handle" nodeRef={controlsRef}>
+			<div ref={controlsRef} className={styles.controls}>
+				<div className={styles.dragBar} id="controls-drag-handle">
+					<div className={styles.bar}></div>
+					<div className={styles.bar}></div>
 				</div>
-				<div className="flex-row">
+				<div className={styles.flexRow}>
 					<button
 						onClick={() => handler('up', 'click')}
 						onMouseDown={() => handler('up', 'down')}
 						onMouseUp={() => handler('up', 'up')}
 						onMouseLeave={() => handler('up', 'up')}
 						id="up"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-angle-up"></i>
 					</button>
@@ -92,7 +91,7 @@ const Controls = (props: { handler: Handler }) => {
 						onMouseUp={() => handler('down', 'up')}
 						onMouseLeave={() => handler('down', 'up')}
 						id="down"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-angle-down"></i>
 					</button>
@@ -102,7 +101,7 @@ const Controls = (props: { handler: Handler }) => {
 						onMouseUp={() => handler('left', 'up')}
 						onMouseLeave={() => handler('left', 'up')}
 						id="left"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-angle-left"></i>
 					</button>
@@ -112,40 +111,52 @@ const Controls = (props: { handler: Handler }) => {
 						onMouseUp={() => handler('right', 'up')}
 						onMouseLeave={() => handler('right', 'up')}
 						id="right"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-angle-right"></i>
 					</button>
 					<button
 						onClick={() => handler('reset', 'click')}
 						id="reset"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-undo-alt"></i>
 					</button>
 				</div>
-				<div className="flex-row">
+				<div className={styles.flexRow}>
 					<button
 						onClick={() => handler('zoom+', 'click')}
 						id="zoom-in"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-search-plus"></i>
 					</button>
 					<button
 						onClick={() => handler('zoom-', 'click')}
 						id="zoom-out"
-						className="shadow-sm"
+						className={styles.shadowSm + ' ' + styles.button}
 					>
 						<i className="fas fa-search-minus"></i>
 					</button>
-					<button disabled id="" className="shadow-sm">
+					<button
+						disabled
+						id=""
+						className={styles.shadowSm + ' ' + styles.button}
+					>
 						<i className="fas fa-cloud"></i>
 					</button>
-					<button disabled id="" className="shadow-sm">
+					<button
+						disabled
+						id=""
+						className={styles.shadowSm + ' ' + styles.button}
+					>
 						<i className="fas fa-cloud"></i>
 					</button>
-					<button disabled id="" className="shadow-sm">
+					<button
+						disabled
+						id=""
+						className={styles.shadowSm + ' ' + styles.button}
+					>
 						<i className="fas fa-cloud"></i>
 					</button>
 				</div>
@@ -185,6 +196,8 @@ export default function GravityKeys() {
 
 	useEffect(() => {
 		console.log('mounted');
+		vx = defaults.vx;
+		vy = defaults.vy;
 		const handleKeydown = function (event: KeyboardEvent) {
 			keys[event.key.toUpperCase()] = true;
 			console.log(keys);
@@ -268,7 +281,7 @@ export default function GravityKeys() {
 
 	return (
 		<div>
-			<div ref={fieldRef} className="field">
+			<div ref={fieldRef} className={styles.field}>
 				<Moon scale={gscale} center={center} pos={pos} speed={speed} />
 				<Earth scale={gscale} />
 				<Controls handler={handleControl} />
