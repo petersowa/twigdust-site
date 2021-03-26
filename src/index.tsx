@@ -8,7 +8,7 @@ import { store } from './redux/store';
 import './styles/index.css';
 import App from './pages/App';
 import About from './pages/About';
-import Register from './pages/Register';
+// import Register from './pages/Register';
 import Links from './pages/Links';
 import Contact from './pages/Contact';
 import Test from './pages/Test';

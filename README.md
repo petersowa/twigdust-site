@@ -1,6 +1,58 @@
-# Getting Started with Create React App
+# Simple Website with React Client Side
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## To Do
+
+- [ ] Add database
+- [ ] Add Readme
+- [ ] Create a utility component to log render stats
+- [ ] Add husky
+- [ ] Add Testing
+- [x] Add Sass
+  - [x] npm install node-sass --save
+- [x] Add Env File
+- [ ] Add Repo on github
+- [ ] Add to DigitalOcean App component for testing
+
+## File/Folder Structure
+
+```text
+/src
+    /components 
+        Footer - page footer
+        Header - page header
+        Layout - layout structure
+        SidebarPrimary - sidebar 
+        Status - status component
+
+    /context
+        global - global context setup using useReducer hook
+
+    /lib
+        location for reusable utility code and components
+
+    /pages
+        stores main content or apps
+
+    /redux - sample redux state setup
+        Store - store setup, includes reducer and actions
+
+    /styles
+        Global and component styles
+
+    index
+        Includes global styles, sets up app states, and creates routing 
+        for pages. Uses Layout component to structure pages.
+
+
+```
+
+## Logs
+- 2/27/2021
+  - Update README.md
+  - Add sass support
+  - Document folder structure
+  - Store app title in .env, later accessed in global context to set initial app title, using \
+  ```title: process.env.REACT_APP_TITLE || 'Snappy Blog',```
 
 ## Available Scripts
 

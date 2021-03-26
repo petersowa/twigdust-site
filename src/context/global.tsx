@@ -1,4 +1,5 @@
 import { createContext, useReducer, Dispatch, useEffect } from 'react';
+import { preProcessFile } from 'typescript';
 
 interface Action {
 	handle: (state: State) => State;
@@ -46,7 +47,7 @@ interface State {
 }
 
 const initialState = {
-	title: 'Snappy Blog',
+	title: process.env.REACT_APP_TITLE || 'Snappy Blog',
 	time: new Date().toLocaleTimeString(),
 };
 
@@ -91,7 +92,7 @@ const actionList: ActionList = {
 		return {
 			handle: (state) => {
 				const time = new Date().toLocaleTimeString();
-				if (state.time == time) return state;
+				if (state.time === time) return state;
 				return { ...state, time };
 			},
 		};
@@ -119,7 +120,7 @@ export const AppContextProvider = (props: Props) => {
 		return () => {
 			clearInterval(interval);
 		};
-	}, []);
+	}, [updateTime]);
 
 	return (
 		<AppContext.Provider value={{ state, actions }}>

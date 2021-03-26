@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import SidebarRight from '../components/SidebarPrimary';
+import SidebarPrimary from '../components/SidebarPrimary';
 
 import '../styles/App.css';
 import { AppContext } from '../context/global';
@@ -26,7 +26,7 @@ function Layout(props: any) {
 			</Helmet>
 			<Header></Header>
 			<main className="App-main  u-rounded">
-				<SidebarRight />
+				<SidebarPrimary />
 				<div className="app-body">{props.children}</div>
 				<div className="app-sidebar">{state.time}</div>
 			</main>

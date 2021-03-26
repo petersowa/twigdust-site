@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 
 const keys: { [key: string]: boolean } = {};
 
@@ -192,7 +192,7 @@ export default function GravityKeys() {
 				setCenter({ x, y });
 			}
 		});
-	}, [fieldRef.current]);
+	}, []);
 
 	useEffect(() => {
 		console.log('mounted');
