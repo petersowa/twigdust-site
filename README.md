@@ -1,9 +1,11 @@
-# Simple Website with React Client Side
+# TwigDust Site
+===
+Simple Website with React Client Side
 
 ## To Do
 
 - [ ] Add database
-- [ ] Add Readme
+- [x] Add Readme
 - [ ] Create a utility component to log render stats
 - [ ] Add husky
 - [ ] Add Testing
